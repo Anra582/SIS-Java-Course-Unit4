@@ -8,4 +8,12 @@ public class Author {
         this.name = name;
         this.birthPlace = birthPlace;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getBirthPlace() {
+        return birthPlace;
+    }
 }
