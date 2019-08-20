@@ -1,6 +1,6 @@
 package unit4;
 
-public class Author {
+public class Author implements IAuthor {
     private String name;
     private String birthPlace;
 
@@ -15,5 +15,10 @@ public class Author {
 
     public String getBirthPlace() {
         return birthPlace;
+    }
+
+    @Override
+    public IAuthor fromLine(String line) {
+        return new Author(line.split(";")[0], line.split(";")[1]);
     }
 }
