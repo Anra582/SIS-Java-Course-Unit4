@@ -15,7 +15,7 @@ import java.nio.file.StandardOpenOption;
 
 import static org.junit.Assert.assertEquals;
 
-public class CSVAdapterImplTest {
+public class CSVAdapterImplPublisherTest {
 
     @ClassRule
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
@@ -27,7 +27,7 @@ public class CSVAdapterImplTest {
             file = temporaryFolder.newFile("TestFile.csv");
             BufferedWriter bufferedWriter = Files.newBufferedWriter(file.toPath(),
                     StandardCharsets.UTF_8, StandardOpenOption.APPEND);
-            bufferedWriter.write("Лев Николаевич Толстой;Ясная Поляна");
+            bufferedWriter.write("Horns and Hooves;Moscow;100500");
             bufferedWriter.newLine();
             bufferedWriter.close();
         } catch (IOException e) {
@@ -44,23 +44,26 @@ public class CSVAdapterImplTest {
 
     @Test
     public void read() {
-        CSVAdapter<Author> csvAdapt = new CSVAdapterImpl<>(Author.class, file);
-        Author author = csvAdapt.read(0);
+        CSVAdapter<Publisher> csvAdapt = new CSVAdapterImpl<>(Publisher.class, file);
+        Publisher publisher = csvAdapt.read(0);
 
-        assertEquals("Лев Николаевич Толстой", author.getName());
-        assertEquals("Ясная Поляна", author.getBirthPlace());
+        assertEquals("Horns and Hooves", publisher.getName());
+        assertEquals("Moscow", publisher.getHeadOfficeLocation());
+        assertEquals(100500, publisher.getCountOfContracts());
     }
 
     @Test
     public void append() {
-        String name = "Someone";
-        String birthPlace = "Somewhere";
+        String name = "Graphomanianc";
+        String headOfficeLocation = "Saint-Peterburg";
+        int countOfContracts = 999999999;
 
-        Author author = new Author(name, birthPlace);
-        CSVAdapter<Author> csvAdapt = new CSVAdapterImpl<>(Author.class, file);
-        int row = csvAdapt.append(author);
-        Author anotherAuthor = csvAdapt.read(row);
-        assertEquals(name, anotherAuthor.getName());
-        assertEquals(birthPlace, anotherAuthor.getBirthPlace());
+        Publisher publisher = new Publisher(name, headOfficeLocation, countOfContracts);
+        CSVAdapter<Publisher> csvAdapt = new CSVAdapterImpl<>(Publisher.class, file);
+        int row = csvAdapt.append(publisher);
+        Publisher anotherPublisher = csvAdapt.read(row);
+        assertEquals(name, anotherPublisher.getName());
+        assertEquals(headOfficeLocation, anotherPublisher.getHeadOfficeLocation());
+        assertEquals(countOfContracts, anotherPublisher.getCountOfContracts());
     }
 }
