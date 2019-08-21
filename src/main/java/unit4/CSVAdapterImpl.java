@@ -8,43 +8,25 @@ import java.util.Scanner;
 
 public class CSVAdapterImpl<T extends IAuthor> implements CSVAdapter<T> {
 
-    private Scanner scanner;
-    private BufferedWriter bufferedWriter;
-    private File inputFile;
+    private T t;
+    private InputStream inputStream;
+    private OutputStream outputStream;
 
-    public CSVAdapterImpl(File inputFile) {
+    public CSVAdapterImpl(T t/*, InputStream inputStream, OutputStream outputStream*/) {
 
+        this.t = t;
+//        this.inputStream = inputStream;
+//        this.outputStream = outputStream;
 
-        try {
-            bufferedWriter = Files.newBufferedWriter(inputFile.toPath(), StandardCharsets.UTF_8, StandardOpenOption.APPEND);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
-    public T read(int rowIndex) {
-        try {
-            scanner = new Scanner(inputFile, String.valueOf(StandardCharsets.UTF_8));
-
-            String stringPattern = String.format("(\n){%s}", rowIndex);
-
-            scanner.skip(stringPattern);
-
-            if(scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-
-                return null;
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public T read(int rowIndex) throws IllegalAccessException, InstantiationException {
+        return (T) t.fromLine("dhbgk;kf");
     }
 
     @Override
     public int append(T entry) {
-
         return 0;
     }
 }
