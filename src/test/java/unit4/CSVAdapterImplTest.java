@@ -10,14 +10,12 @@ public class CSVAdapterImplTest {
 
     @Test
     public void read() {
-        CSVAdapter<Author> csvAdapt = new CSVAdapterImpl<Author>(new Author());
+        CSVAdapter<Author> csvAdapt = new CSVAdapterImpl<Author>(Author.class);
         try {
-            System.out.println("Hello there");
             Author author = (Author) csvAdapt.read(0);
             System.out.println(author.getName());
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
+            System.out.println(author.getBirthPlace());
+        } catch (IllegalAccessException | InstantiationException e) {
             e.printStackTrace();
         }
     }

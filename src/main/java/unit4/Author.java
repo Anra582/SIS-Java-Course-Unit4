@@ -26,4 +26,9 @@ public class Author implements IAuthor {
     public IAuthor fromLine(String line) {
         return new Author(line.split(";")[0], line.split(";")[1]);
     }
+
+    @Override
+    public String getLine() {
+        return String.valueOf(this.name + ";" + this.birthPlace);
+    }
 }
