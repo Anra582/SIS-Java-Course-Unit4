@@ -13,36 +13,53 @@ public class CSVAdapterImpl<T extends IAuthor> implements CSVAdapter<T> {
     private Class<T> t;
     private FileInputStream fileInputStream;
     private FileOutputStream fileOutputStream;
+    private File inputFile;
 
-    public CSVAdapterImpl(Class<T> t, FileInputStream fileInputStream, FileOutputStream fileOutputStream) {
+    public CSVAdapterImpl(Class<T> t, File inputFile) {
 
         this.t = t;
-        this.fileInputStream = fileInputStream;
-        this.fileOutputStream = fileOutputStream;
+        this.inputFile = inputFile;
+//        this.fileInputStream = fileInputStream;
+//        this.fileOutputStream = fileOutputStream;
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public T read(int rowIndex) throws IllegalAccessException, InstantiationException {
+        FileInputStream fileInputStream = null;
+        try {
+            fileInputStream = new FileInputStream(inputFile);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, StandardCharsets.UTF_8);
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-        Scanner scanner = new Scanner(bufferedReader);
+        Scanner scanner = null;
+        scanner = new Scanner(bufferedReader);   //inputFile.toPath(), String.valueOf(StandardCharsets.UTF_8));
 
-        Pattern pattern = Pattern.compile(String.format("\n{%s}", rowIndex));
-        scanner.skip(pattern);
+//        Pattern pattern = Pattern.compile(String.format("\n{%s}", rowIndex));
+//        if (scanner != null) {
+//            scanner.skip(pattern);
+//        }
+        String line = null;
 
-        if (scanner.hasNextLine()) {
-            String line = scanner.nextLine();
+        if (scanner != null) {
+            for (int i = 0; i < rowIndex + 1; i++)
+            {
+                if (scanner.hasNextLine()) {
+                    line = scanner.nextLine();
+                }
+            }
             return (T) t.newInstance().fromLine(line);
         }
-        return  null;
+        return null;
     }
 
     @Override
-    public int append(T entry) {
-        PrintWriter printWriter = new PrintWriter(fileOutputStream);
+    public int append(T entry) throws FileNotFoundException {
+        PrintWriter printWriter = new PrintWriter(new FileOutputStream("Authors.csv", true));
         String entryLine = entry.getLine();
-        
+
         printWriter.println(entryLine);
         printWriter.close();
 
