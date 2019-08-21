@@ -4,6 +4,11 @@ public class Author implements IAuthor {
     private String name;
     private String birthPlace;
 
+    public Author() {
+        this.name = null;
+        this.birthPlace = null;
+    }
+
     public Author(String name, String birthPlace) {
         this.name = name;
         this.birthPlace = birthPlace;
@@ -24,6 +29,6 @@ public class Author implements IAuthor {
 
     @Override
     public String getLine() {
-        return String.valueOf(this.name + ";" + this.birthPlace);
+        return this.name + ";" + this.birthPlace;
     }
 }

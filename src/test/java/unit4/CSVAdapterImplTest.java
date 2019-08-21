@@ -44,7 +44,7 @@ public class CSVAdapterImplTest {
     @Test
     public void read() {
         CSVAdapter<Author> csvAdapt = new CSVAdapterImpl<>(Author.class, file);
-        Author author = (Author) csvAdapt.read(0);
+        Author author = csvAdapt.read(0);
 
         assertEquals("Лев Николаевич Толстой", author.getName());
         assertEquals("Ясная Поляна", author.getBirthPlace());
