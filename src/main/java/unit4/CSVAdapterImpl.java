@@ -6,15 +6,17 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.Scanner;
 
-public class CSVAdapterImpl<T extends IAuthor> implements CSVAdapter<T> {
+public class CSVAdapterImpl<T extends CSVEditable> implements CSVAdapter<T> {
 
     private Class<T> t;
     private File inputFile;
+    private String delimiter;
 
-    public CSVAdapterImpl(Class<T> t, File inputFile) {
+    public CSVAdapterImpl(Class<T> t, File inputFile, String delimiter) {
 
         this.t = t;
         this.inputFile = inputFile;
+        this.delimiter = delimiter;
     }
 
     @SuppressWarnings("unchecked")
@@ -30,9 +32,8 @@ public class CSVAdapterImpl<T extends IAuthor> implements CSVAdapter<T> {
                     line = scanner.nextLine();
                 }
             }
-            scanner.close();
 
-            return (T) t.newInstance().fromLine(line);
+            return (T) t.newInstance().fromLine(line, delimiter);
         } catch (IOException | InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -52,7 +53,7 @@ public class CSVAdapterImpl<T extends IAuthor> implements CSVAdapter<T> {
     public int append(T entry) {
         try(BufferedWriter bufferedWriter = Files.newBufferedWriter(inputFile.toPath(),
                 StandardCharsets.UTF_8, StandardOpenOption.APPEND)) {
-            bufferedWriter.write(entry.getLine() + "\n");
+            bufferedWriter.write(entry.getLine(delimiter) + "\n");
         } catch (IOException e) {
             e.printStackTrace();
         }

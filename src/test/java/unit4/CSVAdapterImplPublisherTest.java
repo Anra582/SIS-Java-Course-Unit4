@@ -20,6 +20,7 @@ public class CSVAdapterImplPublisherTest {
     @ClassRule
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
     private static File file;
+    private static final String delimiter = ";";
 
     @Before
     public void createFile() {
@@ -27,7 +28,7 @@ public class CSVAdapterImplPublisherTest {
             file = temporaryFolder.newFile("TestFile.csv");
             BufferedWriter bufferedWriter = Files.newBufferedWriter(file.toPath(),
                     StandardCharsets.UTF_8, StandardOpenOption.APPEND);
-            bufferedWriter.write("Horns and Hooves;Moscow;100500");
+            bufferedWriter.write("Horns and Hooves" + delimiter + "Moscow" + delimiter + "100500");
             bufferedWriter.newLine();
             bufferedWriter.close();
         } catch (IOException e) {
@@ -44,7 +45,7 @@ public class CSVAdapterImplPublisherTest {
 
     @Test
     public void read() {
-        CSVAdapter<Publisher> csvAdapt = new CSVAdapterImpl<>(Publisher.class, file);
+        CSVAdapter<Publisher> csvAdapt = new CSVAdapterImpl<>(Publisher.class, file, delimiter);
         Publisher publisher = csvAdapt.read(0);
 
         assertEquals("Horns and Hooves", publisher.getName());
@@ -59,7 +60,7 @@ public class CSVAdapterImplPublisherTest {
         int countOfContracts = 999999999;
 
         Publisher publisher = new Publisher(name, headOfficeLocation, countOfContracts);
-        CSVAdapter<Publisher> csvAdapt = new CSVAdapterImpl<>(Publisher.class, file);
+        CSVAdapter<Publisher> csvAdapt = new CSVAdapterImpl<>(Publisher.class, file, delimiter);
         int row = csvAdapt.append(publisher);
         Publisher anotherPublisher = csvAdapt.read(row);
         assertEquals(name, anotherPublisher.getName());

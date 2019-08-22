@@ -1,6 +1,6 @@
 package unit4;
 
-public class Publisher implements IAuthor {
+public class Publisher implements CSVEditable {
     private String name;
     private String headOfficeLocation;
     private int countOfContracts;
@@ -30,14 +30,12 @@ public class Publisher implements IAuthor {
     }
     
     @Override
-    public IAuthor fromLine(String line) {
-        return new Publisher(line.split(";")[0], line.split(";")[1], Integer.parseInt(line.split(";")[2]));
+    public CSVEditable fromLine(String line, String delimiter) {
+        return new Publisher(line.split(delimiter)[0], line.split(delimiter)[1], Integer.parseInt(line.split(delimiter)[2]));
     }
 
     @Override
-    public String getLine() {
-        return this.name + ";" + this.headOfficeLocation + ";" + this.countOfContracts;
+    public String getLine(String delimiter) {
+        return this.name + delimiter + this.headOfficeLocation + delimiter + this.countOfContracts;
     }
-
-
 }

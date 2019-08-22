@@ -20,6 +20,7 @@ public class CSVAdapterImplTest {
     @ClassRule
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
     private static File file;
+    private static final String delimiter = ";";
 
     @Before
     public void createFile() {
@@ -27,7 +28,7 @@ public class CSVAdapterImplTest {
             file = temporaryFolder.newFile("TestFile.csv");
             BufferedWriter bufferedWriter = Files.newBufferedWriter(file.toPath(),
                     StandardCharsets.UTF_8, StandardOpenOption.APPEND);
-            bufferedWriter.write("Лев Николаевич Толстой;Ясная Поляна");
+            bufferedWriter.write("Лев Николаевич Толстой" + delimiter + "Ясная Поляна");
             bufferedWriter.newLine();
             bufferedWriter.close();
         } catch (IOException e) {
@@ -44,7 +45,7 @@ public class CSVAdapterImplTest {
 
     @Test
     public void read() {
-        CSVAdapter<Author> csvAdapt = new CSVAdapterImpl<>(Author.class, file);
+        CSVAdapter<Author> csvAdapt = new CSVAdapterImpl<>(Author.class, file, delimiter);
         Author author = csvAdapt.read(0);
 
         assertEquals("Лев Николаевич Толстой", author.getName());
@@ -57,7 +58,7 @@ public class CSVAdapterImplTest {
         String birthPlace = "Somewhere";
 
         Author author = new Author(name, birthPlace);
-        CSVAdapter<Author> csvAdapt = new CSVAdapterImpl<>(Author.class, file);
+        CSVAdapter<Author> csvAdapt = new CSVAdapterImpl<>(Author.class, file, delimiter);
         int row = csvAdapt.append(author);
         Author anotherAuthor = csvAdapt.read(row);
         assertEquals(name, anotherAuthor.getName());
