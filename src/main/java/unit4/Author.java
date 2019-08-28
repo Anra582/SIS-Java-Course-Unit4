@@ -1,5 +1,8 @@
 package unit4;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Author implements CSVEditable {
     private String name;
     private String birthPlace;
@@ -23,12 +26,13 @@ public class Author implements CSVEditable {
     }
 
     @Override
-    public CSVEditable fromLine(String line, String delimiter) {
-        return new Author(line.split(delimiter)[0], line.split(delimiter)[1]);
+    public void fromArray(List<String> stringList) {
+        this.name = stringList.get(0);
+        this.birthPlace = stringList.get(1);
     }
 
     @Override
-    public String getLine(String delimiter) {
-        return this.name + delimiter+ this.birthPlace;
+    public List<String> getParamsAsArray() {
+        return Arrays.asList(this.name, this.birthPlace);
     }
 }

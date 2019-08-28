@@ -21,6 +21,7 @@ public class CSVAdapterImplTest {
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
     private static File file;
     private static final String delimiter = ";";
+    private static CSVLineParser csvLineParser = new CSVLineParser(delimiter);
 
     @Before
     public void createFile() {
@@ -45,7 +46,7 @@ public class CSVAdapterImplTest {
 
     @Test
     public void read() {
-        CSVAdapter<Author> csvAdapt = new CSVAdapterImpl<>(Author.class, file, delimiter);
+        CSVAdapter<Author> csvAdapt = new CSVAdapterImpl<>(Author.class, file, csvLineParser);
         Author author = csvAdapt.read(0);
 
         assertEquals("Лев Николаевич Толстой", author.getName());
@@ -58,7 +59,7 @@ public class CSVAdapterImplTest {
         String birthPlace = "Somewhere";
 
         Author author = new Author(name, birthPlace);
-        CSVAdapter<Author> csvAdapt = new CSVAdapterImpl<>(Author.class, file, delimiter);
+        CSVAdapter<Author> csvAdapt = new CSVAdapterImpl<>(Author.class, file, csvLineParser);
         int row = csvAdapt.append(author);
         Author anotherAuthor = csvAdapt.read(row);
         assertEquals(name, anotherAuthor.getName());

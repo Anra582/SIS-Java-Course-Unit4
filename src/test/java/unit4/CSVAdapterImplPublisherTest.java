@@ -21,6 +21,7 @@ public class CSVAdapterImplPublisherTest {
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
     private static File file;
     private static final String delimiter = ";";
+    private static CSVLineParser csvLineParser = new CSVLineParser(delimiter);
 
     @Before
     public void createFile() {
@@ -45,7 +46,7 @@ public class CSVAdapterImplPublisherTest {
 
     @Test
     public void read() {
-        CSVAdapter<Publisher> csvAdapt = new CSVAdapterImpl<>(Publisher.class, file, delimiter);
+        CSVAdapter<Publisher> csvAdapt = new CSVAdapterImpl<>(Publisher.class, file, csvLineParser);
         Publisher publisher = csvAdapt.read(0);
 
         assertEquals("Horns and Hooves", publisher.getName());
@@ -60,7 +61,7 @@ public class CSVAdapterImplPublisherTest {
         int countOfContracts = 999999999;
 
         Publisher publisher = new Publisher(name, headOfficeLocation, countOfContracts);
-        CSVAdapter<Publisher> csvAdapt = new CSVAdapterImpl<>(Publisher.class, file, delimiter);
+        CSVAdapter<Publisher> csvAdapt = new CSVAdapterImpl<>(Publisher.class, file, csvLineParser);
         int row = csvAdapt.append(publisher);
         Publisher anotherPublisher = csvAdapt.read(row);
         assertEquals(name, anotherPublisher.getName());

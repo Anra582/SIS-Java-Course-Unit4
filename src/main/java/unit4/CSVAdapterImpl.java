@@ -4,22 +4,22 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
+import java.util.List;
 import java.util.Scanner;
 
 public class CSVAdapterImpl<T extends CSVEditable> implements CSVAdapter<T> {
 
     private Class<T> t;
     private File inputFile;
-    private String delimiter;
+    private LineParser lineParser;
 
-    public CSVAdapterImpl(Class<T> t, File inputFile, String delimiter) {
+    public CSVAdapterImpl(Class<T> t, File inputFile, LineParser lineParser) {
 
         this.t = t;
         this.inputFile = inputFile;
-        this.delimiter = delimiter;
+        this.lineParser = lineParser;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public T read(int rowIndex) {
         try (Scanner scanner = new Scanner(new BufferedReader
@@ -33,7 +33,10 @@ public class CSVAdapterImpl<T extends CSVEditable> implements CSVAdapter<T> {
                 }
             }
 
-            return (T) t.newInstance().fromLine(line, delimiter);
+            List<String> stringList = lineParser.fromLine(line);
+            T obj = t.newInstance();
+            obj.fromArray(stringList);
+            return obj;
         } catch (IOException | InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -53,7 +56,8 @@ public class CSVAdapterImpl<T extends CSVEditable> implements CSVAdapter<T> {
     public int append(T entry) {
         try(BufferedWriter bufferedWriter = Files.newBufferedWriter(inputFile.toPath(),
                 StandardCharsets.UTF_8, StandardOpenOption.APPEND)) {
-            bufferedWriter.write(entry.getLine(delimiter) + "\n");
+            String line = lineParser.toLine(entry.getParamsAsArray());
+            bufferedWriter.write(line + "\n");
         } catch (IOException e) {
             e.printStackTrace();
         }
